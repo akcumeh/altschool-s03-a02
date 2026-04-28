@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Reminder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* palette: #060930  #333456  #595B83  #F4ABC4 */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Overpass', sans-serif;
+            min-height: 100vh;
+            background: #060930;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: #333456;
+            border-radius: 24px;
+            padding: 2.75rem 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 24px 64px rgba(6, 9, 48, 0.6);
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(244, 171, 196, 0.15);
+            color: #F4ABC4;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            margin-bottom: 0.85rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            margin-bottom: 0.4rem;
+        }
+
+        h1 span {
+            color: #F4ABC4;
+        }
+
+        p.subtitle {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.875rem;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 0.45rem;
+        }
+
+        .field {
+            margin-bottom: 1.25rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1.1rem;
+            background: #060930;
+            border: 1.5px solid #595B83;
+            border-radius: 14px;
+            font-family: 'Overpass', sans-serif;
+            font-size: 0.95rem;
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        input:focus {
+            border-color: #F4ABC4;
+            box-shadow: 0 0 0 3px rgba(244, 171, 196, 0.15);
+        }
+
+        /* Date picker */
+        input[type="date"] {
+            color-scheme: dark;
+            cursor: pointer;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.7) sepia(1) saturate(3) hue-rotate(290deg);
+            cursor: pointer;
+            border-radius: 6px;
+            padding: 2px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.9rem;
+            margin-top: 0.5rem;
+            background: #F4ABC4;
+            color: #060930;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Overpass', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button[type="submit"]:hover {
+            background: #f096b4;
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        button[type="submit"]:disabled {
+            background: #595B83;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success state — replaces the form */
+        .success-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(244, 171, 196, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .success-screen h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-screen p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .success-screen p strong {
+            color: #F4ABC4;
+        }
+
+        .btn-again {
+            margin-top: 1.75rem;
+            padding: 0.65rem 1.5rem;
+            background: transparent;
+            border: 1.5px solid #595B83;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Overpass', sans-serif;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .btn-again:hover {
+            border-color: #F4ABC4;
+            color: #F4ABC4;
+        }
+
+        /* Inline error message */
+        #errorMsg {
+            display: none;
+            margin-top: 0.85rem;
+            padding: 0.75rem 1rem;
+            background: rgba(244, 100, 100, 0.12);
+            border: 1px solid rgba(244, 100, 100, 0.3);
+            border-radius: 10px;
+            color: #f49090;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div id="formView">
+            <div class="card-header">
+                <h1>Never miss a <span>birthday</span> again.</h1>
+                <p class="subtitle">We'll send you a personalised email every year on your special day.</p>
+            </div>
+
+            <form id="registerForm">
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="user_name" required />
+                </div>
+
+                <div class="field">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required />
+                </div>
+
+                <div class="field">
+                    <label for="date_of_birth">Date of birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" required />
+                </div>
+
+                <button type="submit" id="submitBtn">Register</button>
+                <div id="errorMsg"></div>
+            </form>
+        </div>
+
+        <div class="success-screen" id="successView">
+            <div class="success-icon">🎂</div>
+            <h2>You're all set!</h2>
+            <p>We'll send a birthday email to <strong id="confirmedEmail"></strong> every year on your special day.</p>
+            <button class="btn-again" id="registerAnother">Register another</button>
+        </div>
+
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const formView = document.getElementById('formView');
+        const successView = document.getElementById('successView');
+        const errorMsg = document.getElementById('errorMsg');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering…';
+
+            const body = {
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                date_of_birth: document.getElementById('date_of_birth').value,
+            };
+
+            try {
+                const res = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById('confirmedEmail').textContent = body.email;
+                    formView.style.display = 'none';
+                    successView.style.display = 'flex';
+                } else {
+                    errorMsg.textContent = data.error || 'Something went wrong. Please try again.';
+                    errorMsg.style.display = 'block';
+                }
+            } catch {
+                errorMsg.textContent = 'Network error. Please check your connection.';
+                errorMsg.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register';
+            }
+        });
+
+        document.getElementById('registerAnother').addEventListener('click', () => {
+            form.reset();
+            errorMsg.style.display = 'none';
+            successView.style.display = 'none';
+            formView.style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>
