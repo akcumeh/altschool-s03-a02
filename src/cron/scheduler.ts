@@ -1,8 +1,8 @@
 import cron from 'node-cron';
 import { checkBirthdays } from '../services/birthdayChecker';
 
-export function startScheduler(): void {
-    cron.schedule('0 7 * * *', async () => {
+export function startScheduler(expression = '0 7 * * *'): void {
+    cron.schedule(expression, async () => {
         console.log('Running daily birthday check...');
         await checkBirthdays();
     });
