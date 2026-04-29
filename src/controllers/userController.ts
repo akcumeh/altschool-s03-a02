@@ -9,6 +9,12 @@ export async function createUser(req: Request, res: Response): Promise<void> {
         return;
     }
 
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!EMAIL_RE.test(email)) {
+        res.status(400).json({ error: 'Invalid email address' });
+        return;
+    }
+
     const { data, error } = await supabase
         .from('users')
         .insert([{ username, email, date_of_birth }])

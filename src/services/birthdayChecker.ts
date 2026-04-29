@@ -8,8 +8,7 @@ export async function checkBirthdays(): Promise<void> {
 
     const { data, error } = await supabase
         .from('users')
-        .select('id, username, email')
-        .like('date_of_birth', `%-${monthStr}-${dayStr}`);
+        .select('id, username, email, date_of_birth');
 
     if (error) {
         console.error('Birthday check failed:', error.message);
@@ -17,11 +16,22 @@ export async function checkBirthdays(): Promise<void> {
     }
 
     if (!data || data.length === 0) {
+        console.log('No users registered yet.');
+        return;
+    }
+
+    const todaysBirthdays = data.filter((user) => {
+        const dob = new Date(user.date_of_birth);
+        return dob.getUTCMonth() + 1 === today.getUTCMonth() + 1
+            && dob.getUTCDate() === today.getUTCDate();
+    });
+
+    if (todaysBirthdays.length === 0) {
         console.log('No birthdays today.');
         return;
     }
 
-    for (const user of data) {
+    for (const user of todaysBirthdays) {
         await sendBirthdayEmail(user.email, user.username);
     }
 }
